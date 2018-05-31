@@ -62,7 +62,7 @@ int * merge(int * v1, int n1, int * v2, int n2)
 
 int main(int argc, char ** argv)
 {
-  int n;
+  int n = atof(argv[1]);
   int * data = NULL;
   int c, s;
   int * chunk;
@@ -83,23 +83,20 @@ int main(int argc, char ** argv)
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &p);
   MPI_Comm_rank(MPI_COMM_WORLD, &id);
-
+  int list[n];
   if (id == 0) {
-    // read size of data
-    file = fopen(argv[1], "r");
-    fscanf(file, "%d", &n);
     // compute chunk size
     c = n/p; if (n%p) c++;
     // read data from file
     data = (int *)malloc(p*c * sizeof(int));
-    for (i = 0; i < n; i++)
-      fscanf(file, "%d", &(data[i]));
-    fclose(file);
-    // pad data with 0 -- doesn't matter
-    for (i = n; i < p*c; i++)
-      data[i] = 0;
+    for(int i = 0; i < n; i++)
+        list[i] = rand(); 
+        data[i]  = list[i];
   }
 
+
+	
+    
   // start the timer
   MPI_Barrier(MPI_COMM_WORLD);
   elapsed_time = - MPI_Wtime();
